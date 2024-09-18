@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@media (prefers-color-scheme: dark) {
+  
+}
+
+body {
+  
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-full h-full px-4 md:px-6 lg:max-w-[1024px] lg:px-0 xl:max-w-[1360px] mx-auto;
+  }
+  * {
+    @apply supports-[-webkit-backdrop-filter]:outline-none outline-none;
+  }
+}
