@@ -14,8 +14,6 @@ services:
       - backend
     depends_on:
       - db
-    volumes:
-      - backend_uploads:/usr/src/app/uploads
 
   frontend:
     container_name: frontend
@@ -58,4 +56,3 @@ networks:
 
 volumes:
   postgres_data:
-  backend_uploads:
