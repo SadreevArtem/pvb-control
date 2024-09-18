@@ -1,0 +1,61 @@
+version: '3.9'
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    image: backend-dev
+    ports:
+      - 4000:3000
+    env_file: .env
+    networks:
+      - backend
+    depends_on:
+      - db
+    volumes:
+      - backend_uploads:/usr/src/app/uploads
+
+  frontend:
+    container_name: frontend
+    build:
+      context: front
+      dockerfile: Dockerfile
+    image: frontend-dev
+    ports:
+      - 8080:3000
+    networks:
+      - frontend
+  
+  db:
+    container_name: postgres
+    image: postgres
+    env_file: .env
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - postgres_data:/data/postgres
+  
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com  # Замените на ваш email
+      PGADMIN_DEFAULT_PASSWORD: admin           # Замените на ваш пароль
+    ports:
+      - 5050:80
+    networks:
+      - backend
+    depends_on:
+      - db
+
+networks:
+  backend:
+  frontend:
+
+volumes:
+  postgres_data:
+  backend_uploads:
