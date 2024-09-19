@@ -6,6 +6,7 @@ import { AppTextField } from "../AppTextField/AppTextField";
 import { useAuthStore } from "../../../shared/stores/auth";
 import { api } from "../../../shared/api/api";
 import Image from "next/image";
+import { getErrorMessage } from "../../../shared/lib/getError";
 
 
 type Inputs = {
@@ -21,7 +22,7 @@ export const Login: React.FC = () => {
     formState: { errors },
   } = useForm<Inputs>()
   const auth = useAuthStore((state) => state.auth);
-  const mutation = useMutation({
+  const {mutate: mutation, isPending} = useMutation({
     mutationFn: api.signInRequest,
     onSuccess: async (data) => {
       const response = await data.json();
@@ -30,7 +31,8 @@ export const Login: React.FC = () => {
     },
     onError: () => window.alert("Ошибка авторизации"),
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => mutation.mutate(data as Inputs);
+  const getError = getErrorMessage(errors);
+  const onSubmit: SubmitHandler<Inputs> = (data) => mutation(data as Inputs);
 
   return (
     <>
@@ -42,35 +44,35 @@ export const Login: React.FC = () => {
           <Image src="/logo-max.png" alt="logo" width={220} height={100} className="self-center"/>
           <Controller
             name="username"
+            rules={{required: true}}
             control={control}
             render={({ field }) => (
               <AppTextField tag="input" label="Имя" {...field} />
             )}
           />
+           {errors.username && (
+            <span className="text-red-500">Введите имя пользователя</span>
+          )}
 
           <Controller
             name="password"
+            rules={{required: true}}
             control={control}
             render={({ field }) => (
               <PasswordTextField
                 tag="input"
                 label="Пароль"
-                // disabled={isLoading}
-                // error={getError("password")}
+                disabled={isPending}
+                error={getError("password")}
                 {...field}
               />
             )}
           />
-          {/* <PasswordTextField
-            variant="filled"
-            label="Пароль"
-            {...register("password", { required: true })}
-          /> */}
           {errors.password && (
-            <span className="text-red-500">Обязательно для заполнения</span>
+            <span className="text-red-500">Введите пароль</span>
           )}
           <button
-            className="text-white bg-primary uppercase text-[18px] rounded-full font-bold border-primary border-2 p-2 px-8 cursor-pointer hover:bg-white hover:text-primary"
+            className="button"
             type="submit"
           >
             Войти

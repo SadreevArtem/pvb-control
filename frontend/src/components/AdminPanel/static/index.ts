@@ -1,8 +1,8 @@
 export const menuAdmin = [
     {
         id: 1,
-        name: "products",
-        value: "Каталог"
+        name: "users",
+        value: "Пользователи"
     },
     {
         id: 2,

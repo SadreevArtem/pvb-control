@@ -25,4 +25,7 @@ body {
   * {
     @apply supports-[-webkit-backdrop-filter]:outline-none outline-none;
   }
+  .button {
+    @apply text-white bg-primary uppercase text-[18px] rounded-full font-bold border-primary border-2 p-1 px-8 cursor-pointer hover:bg-white hover:text-primary
+  }
 }
