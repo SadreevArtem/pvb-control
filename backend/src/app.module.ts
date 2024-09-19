@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as winston from 'winston';
 import { DatabaseConfigFactory } from './config/database-config.factory';
 import { WinstonModule } from 'nest-winston';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { WinstonModule } from 'nest-winston';
     }),
     CacheModule.register({ ttl: 5, max: 10, isGlobal: true }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
