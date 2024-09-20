@@ -1,9 +1,20 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  UseFilters,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtGuard } from 'src/guard/jwt.guard';
 import { AuthUser } from 'src/common/decorators/user.decorator';
 import { User } from './entities/user.entity';
+import { EntityNotFoundFilter } from 'src/common/filters/entity-not-found-exception.filter';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { hashValue } from 'src/helpers/hash';
 
 @Controller('users')
 export class UsersController {
@@ -18,5 +29,32 @@ export class UsersController {
   @Get()
   findAll(@AuthUser() user: User) {
     return this.usersService.findAll(user);
+  }
+  @UseGuards(JwtGuard)
+  @Patch(':id')
+  @UseFilters(EntityNotFoundFilter)
+  async update(@AuthUser() user: User, @Body() updateUserDto: UpdateUserDto) {
+    const { id, role } = user;
+    const { password } = updateUserDto;
+    return this.usersService.update(id, role, {
+      ...updateUserDto,
+      ...(Boolean(password) && { password: await hashValue(password) }),
+    });
+  }
+  @UseGuards(JwtGuard)
+  @Get('me')
+  async findOwn(@AuthUser() user: User): Promise<User> {
+    return this.usersService.findOwn({
+      select: {
+        email: true,
+        username: true,
+        id: true,
+        avatar: true,
+        about: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      where: { id: user.id },
+    });
   }
 }

@@ -20,7 +20,7 @@ export class User {
   username: string;
 
   @Column({
-    default: 'Пока ничего не рассказал о себе',
+    default: 'First Name, Last Name',
   })
   @Length(2, 200)
   about: string;

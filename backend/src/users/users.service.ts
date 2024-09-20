@@ -5,6 +5,7 @@ import { Equal, FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hashValue } from 'src/helpers/hash';
 import { UserRole } from 'src/types';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -45,10 +46,28 @@ export class UsersService {
     return this.userRepository.find({ order: { id: 'ASC' } });
   }
 
-  findOne(query: FindOneOptions<User>) {
-    return this.userRepository.findOneOrFail(query); // TODO:
+  findOne(query: FindOneOptions<User>, user: User) {
+    if (user.role !== UserRole.ADMIN) {
+      throw new BadRequestException('Недостаточно прав');
+    }
+    return this.userRepository.findOneOrFail(query);
+  }
+  //get info about user
+  findOwn(query: FindOneOptions<User>) {
+    return this.userRepository.findOneOrFail(query);
+  }
+  async update(id: number, role, updateUserDto: UpdateUserDto) {
+    if (role !== UserRole.ADMIN) {
+      throw new BadRequestException('Недостаточно прав');
+    }
+    if (await this.userExists(updateUserDto)) {
+      throw new BadRequestException(
+        'Пользователь с указанными данными уже зарегистрирован',
+      );
+    }
+    return this.userRepository.update({ id }, updateUserDto);
   }
   findById(id: number) {
-    return this.userRepository.findOneBy({ id }); // TODO
+    return this.userRepository.findOneBy({ id }); // for validation
   }
 }
