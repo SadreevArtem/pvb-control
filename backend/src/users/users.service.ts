@@ -4,6 +4,7 @@ import { User } from './entities/user.entity';
 import { Equal, FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hashValue } from 'src/helpers/hash';
+import { UserRole } from 'src/types';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +21,12 @@ export class UsersService {
     }));
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto, user: User) {
+    if (user.role !== UserRole.ADMIN) {
+      throw new BadRequestException(
+        'Недостаточно прав для создания пользователя',
+      );
+    }
     if (await this.userExists(createUserDto)) {
       throw new BadRequestException(
         'Пользователь с указанными данными уже существует',
@@ -32,14 +38,17 @@ export class UsersService {
       password: await hashValue(password),
     });
   }
-  findAll(): Promise<User[]> {
+  findAll(user: User): Promise<User[]> {
+    if (user.role !== UserRole.ADMIN) {
+      throw new BadRequestException('Недостаточно прав');
+    }
     return this.userRepository.find({ order: { id: 'ASC' } });
   }
 
   findOne(query: FindOneOptions<User>) {
-    return this.userRepository.findOneOrFail(query);
+    return this.userRepository.findOneOrFail(query); // TODO:
   }
   findById(id: number) {
-    return this.userRepository.findOneBy({ id });
+    return this.userRepository.findOneBy({ id }); // TODO
   }
 }

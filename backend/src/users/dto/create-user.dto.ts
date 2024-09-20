@@ -1,4 +1,12 @@
-import { IsEmail, IsOptional, IsString, IsUrl, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Length,
+} from 'class-validator';
+import { UserRole } from 'src/types';
 
 export class CreateUserDto {
   @IsString()
@@ -15,4 +23,7 @@ export class CreateUserDto {
   email: string;
   @IsString()
   password: string;
+  @IsEnum(UserRole)
+  @IsOptional()
+  role?: UserRole;
 }
