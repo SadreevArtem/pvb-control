@@ -3,8 +3,15 @@ import { Login } from "@/components/Login/Login";
 import { useAuthStore } from "../../shared/stores/auth";
 import { AdminPanel } from "@/components/AdminPanel/AdminPanel";
 import { useEffect, useState } from "react";
+import { GetStaticPropsContext } from "next";
 
-
+export async function getStaticProps({locale}: GetStaticPropsContext) {
+  return {
+    props: {
+      messages: (await import(`../../messages/${locale}.json`)).default
+    }
+  };
+}
 
 export default function Home() {
   const token = useAuthStore((state) => state.token);

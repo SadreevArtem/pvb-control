@@ -45,11 +45,8 @@ export class UsersService {
     }
     return this.userRepository.find({ order: { id: 'ASC' } });
   }
-
-  findOne(query: FindOneOptions<User>, user: User) {
-    if (user.role !== UserRole.ADMIN) {
-      throw new BadRequestException('Недостаточно прав');
-    }
+  //for validate user
+  findOne(query: FindOneOptions<User>) {
     return this.userRepository.findOneOrFail(query);
   }
   //get info about user

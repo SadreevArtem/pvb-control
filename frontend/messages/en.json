@@ -1,0 +1,15 @@
+{
+    "Login": {
+      "name": "Name",
+      "password": "Password",
+      "signIn": "Sign In",
+      "requiredName": "Enter your username",
+      "requiredPassword": "Enter your password"
+    },
+    "LocaleSwitcher": {
+    "switchLocale": "{locale, select, ru {RU} en {RU} other {Unknown}}"
+  },
+  "AdminPanel": {
+    "signOut": "Sign out"
+  }
+}

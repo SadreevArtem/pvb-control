@@ -2,7 +2,9 @@
 import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NextPage } from "next";
+import { NextIntlClientProvider } from "next-intl";
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
 import { ReactElement, ReactNode, useState } from "react";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -18,11 +20,18 @@ export default function App({ Component, pageProps }: AppProps) {
       },
     },
   }))
+  const router = useRouter();
   return getLayout(
     <>
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-      </QueryClientProvider>
+      <NextIntlClientProvider
+        locale={router.locale}
+        messages={pageProps.messages}
+         timeZone="Europe/Vienna"
+      >
+        <QueryClientProvider client={queryClient}>
+          <Component {...pageProps} />
+        </QueryClientProvider>
+      </NextIntlClientProvider>
     </>
   );
 }

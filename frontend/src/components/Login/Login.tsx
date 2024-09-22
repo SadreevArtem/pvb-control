@@ -7,6 +7,8 @@ import { useAuthStore } from "../../../shared/stores/auth";
 import { api } from "../../../shared/api/api";
 import Image from "next/image";
 import { getErrorMessage } from "../../../shared/lib/getError";
+import { useTranslations } from "next-intl";
+import LocaleSwitcher from "../LocaleSwitcher/LocaleSwitcher";
 
 
 type Inputs = {
@@ -22,11 +24,14 @@ export const Login: React.FC = () => {
     formState: { errors },
   } = useForm<Inputs>()
   const auth = useAuthStore((state) => state.auth);
-  const {mutate: mutation, isPending} = useMutation({
+  const t = useTranslations('Login');
+  const { mutate: mutation, isPending } = useMutation({
     mutationFn: api.signInRequest,
     onSuccess: async (data) => {
-      const response = await data.json();
-      const token = response.access_token;
+      const token = data.access_token;
+      if (!token) {
+        throw new Error();
+      }
       auth(token);
     },
     onError: () => window.alert("Ошибка авторизации"),
@@ -41,27 +46,34 @@ export const Login: React.FC = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="md:w-[30%] py-4 flex flex-col md:gap-6 gap-4"
         >
-          <Image src="/logo-max.png" alt="logo" width={220} height={100} className="self-center"/>
+          <LocaleSwitcher className="" />
+          <Image
+            src="/logo-max.png"
+            alt="logo"
+            width={220}
+            height={100}
+            className="self-center"
+          />
           <Controller
             name="username"
-            rules={{required: true}}
+            rules={{ required: true }}
             control={control}
             render={({ field }) => (
-              <AppTextField tag="input" label="Имя" {...field} />
+              <AppTextField tag="input" label={t("name")} {...field} />
             )}
           />
-           {errors.username && (
-            <span className="text-red-500">Введите имя пользователя</span>
+          {errors.username && (
+            <span className="text-red-500">{t("requiredName")}</span>
           )}
 
           <Controller
             name="password"
-            rules={{required: true}}
+            rules={{ required: true }}
             control={control}
             render={({ field }) => (
               <PasswordTextField
                 tag="input"
-                label="Пароль"
+                label={t("password")}
                 disabled={isPending}
                 error={getError("password")}
                 {...field}
@@ -69,13 +81,10 @@ export const Login: React.FC = () => {
             )}
           />
           {errors.password && (
-            <span className="text-red-500">Введите пароль</span>
+            <span className="text-red-500">{t("requiredPassword")}</span>
           )}
-          <button
-            className="button"
-            type="submit"
-          >
-            Войти
+          <button className="button" type="submit">
+            {t("signIn")}
           </button>
         </form>
       </div>
