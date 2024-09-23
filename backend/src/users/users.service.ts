@@ -57,14 +57,41 @@ export class UsersService {
     if (role !== UserRole.ADMIN) {
       throw new BadRequestException('Недостаточно прав');
     }
-    if (await this.userExists(updateUserDto)) {
-      throw new BadRequestException(
-        'Пользователь с указанными данными уже зарегистрирован',
-      );
-    }
+    // if (await this.userExists(updateUserDto)) {
+    //   throw new BadRequestException(
+    //     'Пользователь с указанными данными уже зарегистрирован',
+    //   );
+    // }
     return this.userRepository.update({ id }, updateUserDto);
   }
   findById(id: number) {
     return this.userRepository.findOneBy({ id }); // for validation
+  }
+  async remove(id: number, user: User) {
+    if (user.role !== UserRole.ADMIN) {
+      throw new BadRequestException(
+        'Недостаточно прав для удаления пользователя',
+      );
+    }
+    const userToDelete = await this.userRepository.findOneBy({ id });
+    if (!userToDelete) {
+      throw new BadRequestException('Пользователь не найден');
+    }
+    return this.userRepository.remove(userToDelete);
+  }
+  // Метод для получения данных пользователя по ID для администратора
+  async findByIdForAdmin(id: number, user: User) {
+    if (user.role !== UserRole.ADMIN) {
+      throw new BadRequestException(
+        'Недостаточно прав для просмотра данных пользователя',
+      );
+    }
+
+    const userById = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new BadRequestException('Пользователь не найден');
+    }
+
+    return userById;
   }
 }

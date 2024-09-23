@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import LocaleSwitcher from "../LocaleSwitcher/LocaleSwitcher";
 import { useRouter } from "next/router";
 import { Users } from "../Users/Users";
+import Image from "next/image";
 
 type Props = {
   title: string;
@@ -36,19 +37,28 @@ export const AdminPanel: React.FC<Props> = ({title, className=""})=> {
         <div className="container mt-8 flex flex-col">
           <LocaleSwitcher className="ml-auto mr-6 mb-8" />
           <div className="flex justify-between items-center">
-            <h1
-              className={clsx(
-                "text-primary font-semibold text-[24px]",
-                className
-              )}
-            >
-              {title}
-            </h1>
+            <div className="flex items-end">
+              <Image
+                src="/logo-max.png"
+                alt="logo"
+                width={100}
+                height={100}
+                className="self-center"
+              />
+              <h1
+                className={clsx(
+                  "text-primary font-semibold text-[24px]",
+                  className
+                )}
+              >
+                {title}
+              </h1>
+            </div>
             <Button onButtonClick={unAuth} title={t("signOut")}></Button>
           </div>
           <div className="flex gap-4 mt-6">
             <div className="">
-              <ul className="flex flex-col">
+              <ul className="flex flex-col mt-12">
                 {menuAdmin.map((item) => (
                   <li
                     onClick={() => handleMenuClick(item.name)}
@@ -67,7 +77,6 @@ export const AdminPanel: React.FC<Props> = ({title, className=""})=> {
             </div>
             <div className="w-full">
               {renderContent()}
-              {/* {currentMenu === "products" ? <Products />: <Orders />} */}
             </div>
           </div>
         </div>

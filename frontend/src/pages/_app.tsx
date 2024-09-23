@@ -6,6 +6,8 @@ import { NextIntlClientProvider } from "next-intl";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { ReactElement, ReactNode, useState } from "react";
+import { useUnAuth } from "../../shared/hooks/useUnAuth";
+import { useBroadCastAuth } from "../../shared/stores/auth";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -21,6 +23,8 @@ export default function App({ Component, pageProps }: AppProps) {
     },
   }))
   const router = useRouter();
+  useUnAuth();
+  useBroadCastAuth();
   return getLayout(
     <>
       <NextIntlClientProvider

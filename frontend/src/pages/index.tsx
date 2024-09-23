@@ -4,6 +4,8 @@ import { useAuthStore } from "../../shared/stores/auth";
 import { AdminPanel } from "@/components/AdminPanel/AdminPanel";
 import { useEffect, useState } from "react";
 import { GetStaticPropsContext } from "next";
+import { UserPanel } from "@/components/UserPanel/UserPanel";
+import { useJwtToken } from "../../shared/hooks/useJwtToken";
 
 export async function getStaticProps({locale}: GetStaticPropsContext) {
   return {
@@ -17,6 +19,9 @@ export default function Home() {
   const token = useAuthStore((state) => state.token);
   const [isClient, setIsClient] = useState(false);
   const isAuth = /^[a-zA-Z0-9-_]+?\.[a-zA-Z0-9-_]+?\.[a-zA-Z0-9-_]+$/.test(token);
+
+  const { sub } = useJwtToken();
+  const isAdmin = Number(sub) === 1;
 
   useEffect(() => {
     setIsClient(true);
@@ -32,7 +37,7 @@ export default function Home() {
       className={`items-center justify-items-center min-h-screen`}
     >
       <main className="">
-      {!isAuth ? <Login /> : <AdminPanel title="PVB-CONTROL" />}
+      {!isAuth ? <Login /> : isAdmin? <AdminPanel title="PVB-CONTROL" /> : <UserPanel />}
       </main>
       <footer className="">
        

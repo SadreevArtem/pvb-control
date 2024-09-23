@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import Cookies from "js-cookie";
+import { useEffect } from "react";
 
 const authChannel = new BroadcastChannel("auth");
 
@@ -48,4 +49,45 @@ authChannel.onmessage = (event) => {
     } else if (message === "login") {
       useAuthStore.getState().broadcastAuth(Cookies.get(tokenStorageKey) ?? "");
     }
+  };
+
+  export const useBroadCastAuth = () => {
+    let prevToken: string;
+    useEffect(() => {
+      const authChannel = new BroadcastChannel("auth");
+      useAuthStore.subscribe((state) => {
+        const token = state.token;
+  
+        if (prevToken === token) {
+          return;
+        }
+  
+        if (token) {
+          authChannel.postMessage("login");
+        } else {
+          authChannel.postMessage("logout");
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        prevToken = token;
+      });
+  
+      const handleMessage = (event: MessageEvent) => {
+        const message = event?.data;
+        if (event.source === window.self) {
+          return;
+        }
+  
+        if (message === "logout") {
+          useAuthStore.getState().broadcastUnAuth();
+        } else if (message === "login") {
+          useAuthStore.getState().broadcastAuth(Cookies.get(tokenStorageKey) ?? "");
+        }
+      };
+  
+      authChannel.addEventListener("message", handleMessage);
+  
+      return () => {
+        authChannel.removeEventListener("message", handleMessage);
+      };
+    }, []);
   };

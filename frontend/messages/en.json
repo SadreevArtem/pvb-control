@@ -1,15 +1,41 @@
 {
-    "Login": {
-      "name": "Name",
-      "password": "Password",
-      "signIn": "Sign In",
-      "requiredName": "Enter your username",
-      "requiredPassword": "Enter your password"
-    },
-    "LocaleSwitcher": {
+  "Login": {
+    "name": "Name",
+    "password": "Password",
+    "signIn": "Sign In",
+    "requiredName": "Enter your username",
+    "requiredPassword": "Enter your password"
+  },
+  "LocaleSwitcher": {
     "switchLocale": "{locale, select, ru {RU} en {RU} other {Unknown}}"
   },
   "AdminPanel": {
     "signOut": "Sign out"
+  },
+  "Users": {
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "created": "Created At",
+    "add": "Add new"
+  },
+  "UserDetail": {
+    "back": "Back",
+    "required": "Required",
+    "edit": "Edit User",
+    "add": "Add User",
+    "username": "User Name",
+    "aboutUser": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "role": "Role",
+    "save": "Save",
+    "delete": "Delete",
+    "admin": "Admin",
+    "tender_manager": "Procurement Specialist",
+    "planner_manager": "Planner",
+    "production_manager": "Production Manager",
+    "control_manager": "Quality Control Manager"
   }
+
 }

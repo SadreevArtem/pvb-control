@@ -1,10 +1,11 @@
 import clsx from "clsx";
+import { ButtonHTMLAttributes } from "react";
 
 type Props = {
-  title: string;
-  className?: string;
-  onButtonClick?: ()=> void;
-};
+    title: string;
+    className?: string;
+    onButtonClick?: ()=> void;
+  } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Button: React.FC<Props> = ( {title, className="", onButtonClick })=> {
     return (

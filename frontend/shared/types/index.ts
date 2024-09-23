@@ -12,8 +12,15 @@ export type User = {
   about: string;
   avatar: string;
   email: string;
-  password: string;
+  password?: string;
   role: UserRole;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type TJwtPayload = {
+  sub: number;
+  username: string;
+  iat: number;
+  exp: number;
 };

@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Patch,
   Post,
   UseFilters,
@@ -31,12 +33,21 @@ export class UsersController {
     return this.usersService.findAll(user);
   }
   @UseGuards(JwtGuard)
+  @Get(':id')
+  async getUserByIdForAdmin(@Param('id') id: string, @AuthUser() user: User) {
+    return this.usersService.findByIdForAdmin(+id, user);
+  }
+  @UseGuards(JwtGuard)
   @Patch(':id')
   @UseFilters(EntityNotFoundFilter)
-  async update(@AuthUser() user: User, @Body() updateUserDto: UpdateUserDto) {
-    const { id, role } = user;
+  async update(
+    @AuthUser() user: User,
+    @Body() updateUserDto: UpdateUserDto,
+    @Param('id') id: string,
+  ) {
+    const { role } = user;
     const { password } = updateUserDto;
-    return this.usersService.update(id, role, {
+    return this.usersService.update(+id, role, {
       ...updateUserDto,
       ...(Boolean(password) && { password: await hashValue(password) }),
     });
@@ -56,5 +67,10 @@ export class UsersController {
       },
       where: { id: user.id },
     });
+  }
+  @UseGuards(JwtGuard)
+  @Delete(':id')
+  async remove(@Param('id') id: string, @AuthUser() user: User) {
+    await this.usersService.remove(+id, user);
   }
 }
