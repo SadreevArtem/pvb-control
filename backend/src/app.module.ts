@@ -11,6 +11,8 @@ import * as winston from 'winston';
 import { DatabaseConfigFactory } from './config/database-config.factory';
 import { WinstonModule } from 'nest-winston';
 import { AuthModule } from './auth/auth.module';
+import { OrdersModule } from './orders/orders.module';
+import { CustomersModule } from './customers/customers.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { AuthModule } from './auth/auth.module';
     CacheModule.register({ ttl: 5, max: 10, isGlobal: true }),
     UsersModule,
     AuthModule,
+    OrdersModule,
+    CustomersModule,
   ],
   controllers: [AppController],
   providers: [

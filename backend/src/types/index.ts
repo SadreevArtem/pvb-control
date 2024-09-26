@@ -6,3 +6,9 @@ export enum UserRole {
     CONTROL_MANAGER = 'control_manager',
   }
   
+export enum OrderStatus {
+  IN_PROGRESS = 'in_progress',
+  INSPECTION = 'inspection',
+  COMPLETED = 'completed',  
+  CANCELLED = 'cancelled',
+}
