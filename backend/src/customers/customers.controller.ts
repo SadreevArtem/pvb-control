@@ -33,6 +33,11 @@ export class CustomersController {
     return this.customersService.findAll();
   }
   @UseGuards(JwtGuard)
+  @Get(':id')
+  async getCustomerById(@Param('id') id: string) {
+    return this.customersService.findById(+id);
+  }
+  @UseGuards(JwtGuard)
   @Patch(':id')
   @UseFilters(EntityNotFoundFilter)
   async update(
