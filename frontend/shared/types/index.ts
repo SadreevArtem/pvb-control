@@ -6,6 +6,14 @@ export enum UserRole {
     CONTROL_MANAGER = 'control_manager',
 }
 
+  
+export enum OrderStatus {
+  IN_PROGRESS = 'in_progress',
+  INSPECTION = 'inspection',
+  COMPLETED = 'completed',  
+  CANCELLED = 'cancelled',
+}
+
 export type User = {
   id: number;
   username: string;
@@ -28,6 +36,21 @@ export type TJwtPayload = {
 export type Customer = {
   id: number;
   name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Order = {
+  id: number;
+  contractNumber: string;
+  contractSingingDate: Date;
+  contractExecutionDate: Date;
+  contractText: string;
+  complectID: string;
+  complectName: string;
+  status: OrderStatus;
+  customer: Customer;
+  owner: User;
   createdAt: Date;
   updatedAt: Date;
 };

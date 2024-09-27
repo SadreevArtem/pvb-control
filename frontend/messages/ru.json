@@ -36,5 +36,17 @@
       "planner_manager": "Планнер",
       "production_manager": "Ответсвенный за производство",
       "control_manager": "Отвественный за контроль"
+    }, 
+    "Orders": {
+      "add": "Добавить",
+      "ID": "ID заказа",
+      "customerName": "Заказчик",
+      "contractNumber": "Номер договора",
+      "contractSingingDate": "Дата подписания контракта",
+      "contractExecutionDate": "Дата исполнения контракта",
+      "complectName": "Текст по договору",
+      "status": "Статус",
+      "owner": "Ответсвенный",
+      "created": "Создано"
     }
 }
