@@ -24,11 +24,13 @@ export const CustomerDetail: React.FC<Props> = ({id}) => {
   const token = useAuthStore((state) => state.token);
   const t = useTranslations('CustomerDetail')
   const queryClient = useQueryClient();
+
     const getCustomerById = () => api.getCustomerByIdRequest(id, token);
+    const getQueryKey = (id: number) => ['customer'].concat(id.toString());
     const router = useRouter();
     
    const { data: customer, isLoading } = useQuery<Customer>({
-     queryKey: ['customerId'],
+     queryKey: getQueryKey(id),
      queryFn: getCustomerById,
      enabled: id !== 0,
    });
@@ -61,14 +63,17 @@ export const CustomerDetail: React.FC<Props> = ({id}) => {
     mutationFn: deleteFunc,
     onSuccess: () => {
       appToast.success("Успешно удалено");
-      router.back()
       queryClient.invalidateQueries({queryKey:['customer']});
+      router.back()
     },
     onError: () => {
       appToast.error("Произошла ошибка");
     },
   })
-  const onDeleteClick = () => deleteMutation.mutate();
+  const onDeleteClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    deleteMutation.mutate();
+  };
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     mutation({
       ...data,
@@ -77,12 +82,13 @@ export const CustomerDetail: React.FC<Props> = ({id}) => {
     
   useEffect(() => {
     if (!customer) return;
-
     Object.keys(customer).forEach((key) => {
-      const currentValue = customer[key as keyof Customer];
-      setValue(key as keyof Customer, currentValue as string);
+      if (key in customer) {
+        setValue(key as keyof Customer, customer[key as keyof Customer] as string);
+      }
     });
   }, [customer, setValue]);
+
   return (
     <>
       {!isLoading && (
@@ -124,7 +130,7 @@ export const CustomerDetail: React.FC<Props> = ({id}) => {
                 <Button disabled={isPending} title={t("save")} type="submit" />
 
                 {id !== 0 && (
-                  <Button title={t("delete")} onButtonClick={onDeleteClick} />
+                  <Button title={t("delete")} onButtonClick={onDeleteClick} type="button" />
                 )}
               </div>
             </form>
