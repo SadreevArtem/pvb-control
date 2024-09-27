@@ -8,6 +8,7 @@ import LocaleSwitcher from "../LocaleSwitcher/LocaleSwitcher";
 import { useRouter } from "next/router";
 import { Users } from "../Users/Users";
 import Image from "next/image";
+import { ReferenceBooks } from "../RefernceBooks/ReferenceBooks";
 
 type Props = {
   title: string;
@@ -24,8 +25,8 @@ export const AdminPanel: React.FC<Props> = ({title, className=""})=> {
       switch (currentMenu) {
         case "users":
           return <Users />;
-        // case "programs":
-        //   return <Programs />;
+        case "reference":
+          return <ReferenceBooks />;
         // case "orders":
         //   return <Orders />;
         default:

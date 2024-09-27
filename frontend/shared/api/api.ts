@@ -1,4 +1,4 @@
-import { User } from "../types";
+import { Customer, User } from "../types";
 
 class API {
   baseUrl: string;
@@ -137,7 +137,118 @@ class API {
       throw error;
     }
   };
+  // запрос на получение справочника заказчиков
+  getAllCustomersRequest = async (token: string) => {
+    try {
+      const response = await fetch(`${this.baseUrl}/customers`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      return await response.json(); 
+    } catch (error) {
+      console.error("Get customers request failed:", error);
+      throw error;
+    }
+  };
+  // запрос на получение заказчика по id
+  getCustomerByIdRequest = async (id: number, token:string) => {
+    try {
+      const response = await fetch(`${this.baseUrl}/customers/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      return await response.json(); 
+    } catch (error) {
+      console.error("Get customers request failed:", error);
+      throw error;
+    }
+  };
+
+  //запрос на создание заказчика 
+  createCustomerRequest = async (input: Customer, token: string) => {
+    try {
+      const response = await fetch(`${this.baseUrl}/customers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(input),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Create customer request failed:", error);
+      throw error;
+    }
+  };
+  // запрос на обновление заказчика
+  updateCustomerRequest = async (input: Customer, token: string) => {
+    if (!input.id) {
+      throw new Error("Customer ID is required for updating");
+    }
   
+    try {
+      const response = await fetch(`${this.baseUrl}/customers/${input.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(input),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error("Update customer request failed:", error);
+      throw error;
+    }
+  };
+  // запрос на удаление заказчика
+  deleteCustomerRequest = async (id: number, token: string) => {
+    try {
+      const response = await fetch(`${this.baseUrl}/customers/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error("Delete customer request failed:", error);
+      throw error;
+    }
+  };
 }
 
 export const api = new API('https://api.pvb-university.com');

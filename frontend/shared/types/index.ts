@@ -24,3 +24,10 @@ export type TJwtPayload = {
   iat: number;
   exp: number;
 };
+
+export type Customer = {
+  id: number;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
