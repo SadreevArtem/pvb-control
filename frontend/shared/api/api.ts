@@ -248,7 +248,28 @@ class API {
       console.error("Delete customer request failed:", error);
       throw error;
     }
-  };
+  }
+    getAllOrdersRequest = async (token: string) => {
+      try {
+        const response = await fetch(`${this.baseUrl}/orders`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+  
+        return await response.json(); 
+      } catch (error) {
+        console.error("Get orders request failed:", error);
+        throw error;
+      }
+    };
+
 }
 
 export const api = new API('https://api.pvb-university.com');

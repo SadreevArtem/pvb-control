@@ -9,6 +9,7 @@ import { Users } from "../Users/Users";
 import Image from "next/image";
 import { ReferenceBooks } from "../RefernceBooks/ReferenceBooks";
 import { useMenuStore } from "../../../shared/stores/menu";
+import { Orders } from "../Orders/Orders";
 
 type Props = {
   title: string;
@@ -27,8 +28,8 @@ export const AdminPanel: React.FC<Props> = ({title, className=""})=> {
           return <Users />;
         case "reference":
           return <ReferenceBooks />;
-        // case "orders":
-        //   return <Orders />;
+        case "orders":
+          return <Orders />;
         default:
           return null; // Возвращает null, если нет совпадений
       }

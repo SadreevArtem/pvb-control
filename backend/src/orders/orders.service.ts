@@ -14,6 +14,9 @@ export class OrdersService {
     private readonly usersService: UsersService,
     private readonly customersService: CustomersService,
   ) {}
+  findAll(): Promise<Order[]> {
+    return this.orderRepository.find({ order: { id: 'ASC' } });
+  }
   async create(createOrderDto: CreateOrderDto, userId: number) {
     const { customerId } = createOrderDto;
     const owner = await this.usersService.findById(userId);
