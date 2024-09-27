@@ -26,10 +26,11 @@ export class CustomersService {
   update(id: number, updateCustomerDto: UpdateCustomerDto) {
     return this.customerRepository.update(id, updateCustomerDto);
   }
-  remove(id: number, user: User) {
+  async remove(id: number, user: User) {
     if (user.role !== UserRole.ADMIN) {
       throw new BadRequestException('Недостаточно прав для удаления заказчика');
     }
-    return this.customerRepository.delete({ id });
+    const customer = await this.customerRepository.findOne({ where: { id } });
+    return this.customerRepository.remove(customer);
   }
 }

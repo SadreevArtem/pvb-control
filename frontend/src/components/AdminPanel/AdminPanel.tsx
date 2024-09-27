@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { menuAdmin } from "./static";
-import { useState } from "react";
 import { Button } from "../Button/Button";
 import { useAuthStore } from "../../../shared/stores/auth";
 import { useTranslations } from "next-intl";
@@ -9,6 +8,7 @@ import { useRouter } from "next/router";
 import { Users } from "../Users/Users";
 import Image from "next/image";
 import { ReferenceBooks } from "../RefernceBooks/ReferenceBooks";
+import { useMenuStore } from "../../../shared/stores/menu";
 
 type Props = {
   title: string;
@@ -16,8 +16,8 @@ type Props = {
 };
 
 export const AdminPanel: React.FC<Props> = ({title, className=""})=> {
-    const [currentMenu, setCurrentMenu] = useState("users");
-    const handleMenuClick = (menu: string) => setCurrentMenu(menu);
+  const { currentMenu, setCurrentMenu } = useMenuStore();
+  
     const unAuth = useAuthStore((state) => state.unAuth);
     const {locale='ru'} = useRouter();
     const t = useTranslations('AdminPanel');
@@ -32,6 +32,9 @@ export const AdminPanel: React.FC<Props> = ({title, className=""})=> {
         default:
           return null; // Возвращает null, если нет совпадений
       }
+    };
+    const handleMenuClick = (menu: string) => {
+      setCurrentMenu(menu); // сохраняем текущее меню в Zustand и localStorage
     };
     return (
       <>

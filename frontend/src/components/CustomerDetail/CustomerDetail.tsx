@@ -25,13 +25,12 @@ export const CustomerDetail: React.FC<Props> = ({id}) => {
   const t = useTranslations('CustomerDetail')
   const queryClient = useQueryClient();
     const getCustomerById = () => api.getCustomerByIdRequest(id, token);
-    const getQueryKey = (id: number) => ['customer'].concat(id.toString());
     const router = useRouter();
     
    const { data: customer, isLoading } = useQuery<Customer>({
-     queryKey: getQueryKey(id),
+     queryKey: ['customerId'],
      queryFn: getCustomerById,
-     enabled: !!id,
+     enabled: id !== 0,
    });
    const {
     register,
@@ -41,12 +40,15 @@ export const CustomerDetail: React.FC<Props> = ({id}) => {
   } = useForm<Inputs>();
   const updateCustomerFunc = (input: Customer)=> api.updateCustomerRequest(input, token);
   const createCustomerFunc = (input: Customer)=> api.createCustomerRequest(input, token);
+  const deleteFunc = ()=> api.deleteCustomerRequest(id, token)
   
-  const mutation = useMutation( {
+  const {mutate: mutation, isPending} = useMutation( {
     mutationFn: isEdit? updateCustomerFunc : createCustomerFunc,
     onSuccess: () => {
       appToast.success(isEdit ? "Успешно изменено" : "Успешно добавлено");
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({
+        queryKey: ["customer"],
+      });
       router.back()
     },
     onError: () => {
@@ -56,11 +58,11 @@ export const CustomerDetail: React.FC<Props> = ({id}) => {
  
   
   const deleteMutation  = useMutation( {
-    mutationFn: ()=> api.deleteCustomerRequest(id, token),
+    mutationFn: deleteFunc,
     onSuccess: () => {
       appToast.success("Успешно удалено");
-      queryClient.invalidateQueries();
       router.back()
+      queryClient.invalidateQueries({queryKey:['customer']});
     },
     onError: () => {
       appToast.error("Произошла ошибка");
@@ -68,17 +70,17 @@ export const CustomerDetail: React.FC<Props> = ({id}) => {
   })
   const onDeleteClick = () => deleteMutation.mutate();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    mutation.mutate({
+    mutation({
       ...data,
     });
   }
     
   useEffect(() => {
     if (!customer) return;
+
     Object.keys(customer).forEach((key) => {
-      if (key in customer) {
-        setValue(key as keyof Customer, customer[key as keyof Customer] as string);
-      }
+      const currentValue = customer[key as keyof Customer];
+      setValue(key as keyof Customer, currentValue as string);
     });
   }, [customer, setValue]);
   return (
@@ -119,9 +121,9 @@ export const CustomerDetail: React.FC<Props> = ({id}) => {
               /> */}
 
               <div className="flex gap-4">
-                <Button title={t("save")} type="submit" />
+                <Button disabled={isPending} title={t("save")} type="submit" />
 
-                {id !== 1 && (
+                {id !== 0 && (
                   <Button title={t("delete")} onButtonClick={onDeleteClick} />
                 )}
               </div>
