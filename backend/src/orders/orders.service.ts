@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { User } from 'src/users/entities/user.entity';
+import { UserRole } from 'src/types';
 import { CustomersService } from 'src/customers/customers.service';
 
 @Injectable()
@@ -17,6 +20,12 @@ export class OrdersService {
   findAll(): Promise<Order[]> {
     return this.orderRepository.find({ order: { id: 'ASC' } });
   }
+  findById(id: number) {
+    return this.orderRepository.findOneBy({ id });
+  }
+  update(id: number, updateOrderDto: UpdateOrderDto) {
+    return this.orderRepository.update(id, updateOrderDto);
+  }
   async create(createOrderDto: CreateOrderDto, userId: number) {
     const { customerId } = createOrderDto;
     const owner = await this.usersService.findById(userId);
@@ -27,5 +36,12 @@ export class OrdersService {
       customer,
     });
     return this.orderRepository.save(order);
+  }
+  async remove(id: number, user: User) {
+    if (user.role !== UserRole.ADMIN) {
+      throw new BadRequestException('Недостаточно прав для удаления заказчика');
+    }
+    const order = await this.orderRepository.findOne({ where: { id } });
+    return this.orderRepository.remove(order);
   }
 }
