@@ -20,10 +20,10 @@ export class Order {
   @Length(2, 200)
   contractNumber: string;
 
-  @Column({ type: 'date' }) // дата подписания контракта
-  contractSingingDate: Date;
+  @Column({ nullable: true }) // дата подписания контракта
+  contractSigningDate: Date;
 
-  @Column({ type: 'date' }) // дата исполнения контракта
+  @Column() // дата исполнения контракта
   contractExecutionDate: Date;
 
   @Column()

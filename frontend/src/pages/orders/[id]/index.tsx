@@ -1,8 +1,8 @@
 import { GetServerSideProps } from "next";
 import { useAuthStore } from "../../../../shared/stores/auth";
 import { useRouter } from "next/router";
-import { CustomerDetail } from "@/components/CustomerDetail/CustomerDetail";
 import { isValidToken } from "../../../../shared/lib/helpers";
+import { OrderDetail } from "@/components/OrderDetail/OrderDetail";
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
@@ -11,6 +11,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
     },
   };
 };
+
+
 
 export default function Customers() {
   const token = useAuthStore((state) => state.token);
@@ -27,7 +29,7 @@ export default function Customers() {
 
   return (
     <div className="items-center justify-items-center min-h-screen">
-      <main>{isAuth && <CustomerDetail id={numericId} />}</main>
+      <main>{isAuth && <OrderDetail id={numericId} />}</main>
       <footer></footer>
     </div>
   );

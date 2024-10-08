@@ -8,6 +8,8 @@ import { useRouter } from "next/router";
 import { ReactElement, ReactNode, useState } from "react";
 import { useUnAuth } from "../../shared/hooks/useUnAuth";
 import { useBroadCastAuth } from "../../shared/stores/auth";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from "@mui/x-date-pickers";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -27,15 +29,17 @@ export default function App({ Component, pageProps }: AppProps) {
   useBroadCastAuth();
   return getLayout(
     <>
-      <NextIntlClientProvider
-        locale={router.locale}
-        messages={pageProps.messages}
-         timeZone="Europe/Vienna"
-      >
-        <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
-        </QueryClientProvider>
-      </NextIntlClientProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <NextIntlClientProvider
+          locale={router.locale}
+          messages={pageProps.messages}
+          timeZone="Europe/Vienna"
+        >
+          <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} />
+          </QueryClientProvider>
+        </NextIntlClientProvider>
+      </LocalizationProvider>
     </>
   );
 }

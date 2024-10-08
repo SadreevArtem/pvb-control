@@ -18,7 +18,10 @@ export class OrdersService {
     private readonly customersService: CustomersService,
   ) {}
   findAll(): Promise<Order[]> {
-    return this.orderRepository.find({ order: { id: 'ASC' } });
+    return this.orderRepository.find({
+      order: { id: 'ASC' },
+      relations: { owner: true, customer: true },
+    });
   }
   findById(id: number) {
     return this.orderRepository.findOneBy({ id });

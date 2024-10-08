@@ -43,7 +43,7 @@ export type Customer = {
 export type Order = {
   id: number;
   contractNumber: string;
-  contractSingingDate: Date;
+  contractSigningDate: Date;
   contractExecutionDate: Date;
   contractText: string;
   complectID: string;

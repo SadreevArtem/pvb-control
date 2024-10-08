@@ -1,4 +1,10 @@
-import { IsEnum, IsNotEmpty, IsOptional, Length } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  Length,
+} from 'class-validator';
 import { OrderStatus } from 'src/types';
 
 export class CreateOrderDto {
@@ -6,10 +12,10 @@ export class CreateOrderDto {
   @Length(2, 200)
   contractNumber: string;
 
-  @IsNotEmpty()
+  @IsDateString()
   contractSigningDate: Date;
 
-  @IsNotEmpty()
+  @IsDateString()
   contractExecutionDate: Date;
 
   @IsNotEmpty()

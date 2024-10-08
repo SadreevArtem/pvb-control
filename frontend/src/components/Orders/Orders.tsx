@@ -54,7 +54,7 @@ export const Orders = () => {
                       </Link>
                     </TableCell>
                     <TableCell>
-                      {new Date(row.contractSingingDate).toLocaleString("ru-RU", {
+                      {new Date(row.contractSigningDate).toLocaleString("ru-RU", {
                         timeZone: "Asia/Yekaterinburg",
                       })}
                     </TableCell>

@@ -1,4 +1,4 @@
-import { Customer, User } from "../types";
+import { Customer, Order, User } from "../types";
 
 class API {
   baseUrl: string;
@@ -269,7 +269,98 @@ class API {
         throw error;
       }
     };
+  // запрос на получение заказа по id
+    getOrderByIdRequest = async (id: number, token:string) => {
+      try {
+        const response = await fetch(`${this.baseUrl}/orders/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+  
+        return await response.json(); 
+      } catch (error) {
+        console.error("Get order request failed:", error);
+        throw error;
+      }
+    };
+// запрос на обновление заказа
+updateOrderRequest = async (input: Order, token: string) => {
+  if (!input.id) {
+    throw new Error("Order ID is required for updating");
+  }
 
+  try {
+    const response = await fetch(`${this.baseUrl}/orders/${input.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(input),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Update order request failed:", error);
+    throw error;
+  }
+};
+//запрос на создание заказчика 
+createOrderRequest = async (input: Order, token: string) => {
+  try {
+    const response = await fetch(`${this.baseUrl}/orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(input),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Create order request failed:", error);
+    throw error;
+  }
+};
+ // запрос на удаление заказчика
+ deleteOrderRequest = async (id: number, token: string) => {
+  try {
+    const response = await fetch(`${this.baseUrl}/orders/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Delete order request failed:", error);
+    throw error;
+  }
+}
 }
 
-export const api = new API('https://api.pvb-university.com');
+export const api = new API('http://localhost:4000');
+
+// export const api = new API('https://api.pvb-university.com');
