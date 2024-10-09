@@ -40,6 +40,28 @@ export type Customer = {
   updatedAt: Date;
 };
 
+export type Complect = {
+  id: number;
+  name: string;
+  equipmentType: string;
+  manufacturer: string;
+  technicalSpecifications: string;
+  brand: string;
+  model: string;
+  diameter: number; 
+  workingPressure: number; 
+  ballType: string;
+  seatType: string;
+  execution: string;
+  trTs: string;
+  startDate?: Date; // Дата старта, может быть не указана
+  acceptanceStartDate?: Date; // Дата старта приемки, может быть не указана
+  documentReadinessDate?: Date; // Дата готовности документов, может быть не указана
+  shipmentDate?: Date; // Дата отгрузки, может быть не указана
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Order = {
   id: number;
   contractNumber: string;
@@ -51,6 +73,7 @@ export type Order = {
   status: OrderStatus;
   customer: Customer;
   owner: User;
+  complects: Complect[];
   createdAt: Date;
   updatedAt: Date;
 };

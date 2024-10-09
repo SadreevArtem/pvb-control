@@ -13,6 +13,7 @@ import { WinstonModule } from 'nest-winston';
 import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
 import { CustomersModule } from './customers/customers.module';
+import { ComplectsModule } from './complects/complects.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { CustomersModule } from './customers/customers.module';
     AuthModule,
     OrdersModule,
     CustomersModule,
+    ComplectsModule,
   ],
   controllers: [AppController],
   providers: [

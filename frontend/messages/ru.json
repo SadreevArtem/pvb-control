@@ -82,6 +82,22 @@
       "in_progress": "в процессе",
       "inspection": "на проверке",
       "completed": "завершен",
-      "cancelled": "отменен"
+      "cancelled": "отменен",
+      "complectId": "ID",
+      "equipmentType": "Вид оборудования",
+      "manufacturer": "Изготовитель",
+      "technicalSpecifications": "Технические условия",
+      "brand": "Марка",
+      "model": "Модель",
+      "diameter": "Диаметр",
+      "workingPressure": "Рабочее давление",
+      "ballType": "Шар - тип",
+      "seatType": "Седло - тип",
+      "execution": "Исполнение",
+      "trTs": "ТР ТС",
+      "startDate": "Дата старта",
+      "acceptanceStartDate": "Дата старта приемки",
+      "documentReadinessDate": "Дата готовности документов",
+      "shipmentDate": "Дата отгрузки"
     }
 }

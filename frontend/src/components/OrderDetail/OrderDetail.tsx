@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -13,6 +13,7 @@ import { formatDate } from "../../../shared/lib/formatDate";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useJwtToken } from "../../../shared/hooks/useJwtToken";
+import Link from "next/link";
 
 
 type Props = {
@@ -261,6 +262,68 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                 onButtonClick={toggleEditMode}
                 type="button"
               />
+              <h2 className="text-xl my-8 font-bold">Комплекты</h2>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow className="bg-gray-100">
+                    <TableCell>{t("complectId")}</TableCell>
+                      <TableCell>{t("equipmentType")}</TableCell>
+                      <TableCell>{t("manufacturer")}</TableCell>
+                      <TableCell>{t("technicalSpecifications")}</TableCell>
+                      <TableCell>{t("brand")}</TableCell>
+                      <TableCell>{t("model")}</TableCell>
+                      <TableCell>{t("diameter")}</TableCell>
+                      <TableCell>{t("workingPressure")}</TableCell>
+                      <TableCell>{t("ballType")}</TableCell>
+                      <TableCell>{t("seatType")}</TableCell>
+                      <TableCell>{t("execution")}</TableCell>
+                      <TableCell>{t("trTs")}</TableCell>
+                      <TableCell>{t("startDate")}</TableCell>
+                      <TableCell>{t("acceptanceStartDate")}</TableCell>
+                      <TableCell>{t("documentReadinessDate")}</TableCell>
+                      <TableCell>{t("shipmentDate")}</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {order?.complects?.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell>
+                          <Link
+                            href={`/users/${row.id}`}
+                            className="hover:text-primary"
+                          >
+                            {row.name}
+                          </Link>
+                        </TableCell>
+                        <TableCell>{row.equipmentType}</TableCell>
+                        <TableCell>{row.manufacturer}</TableCell>
+                        <TableCell>{row.technicalSpecifications}</TableCell>
+                        <TableCell>{row.brand}</TableCell>
+                        <TableCell>{row.model}</TableCell>
+                        <TableCell>{row.diameter}</TableCell>
+                        <TableCell>{row.workingPressure}</TableCell>
+                        <TableCell>{row.ballType}</TableCell>
+                        <TableCell>{row.seatType}</TableCell>
+                        <TableCell>{row.execution}</TableCell>
+                        <TableCell>{row.trTs}</TableCell>
+                        <TableCell>
+                          {formatDate(row.startDate)}
+                        </TableCell>
+                        <TableCell>
+                          {formatDate(row.acceptanceStartDate)}
+                        </TableCell>
+                        <TableCell>
+                          {formatDate(row.documentReadinessDate)}
+                        </TableCell>
+                        <TableCell>
+                          {formatDate(row.shipmentDate)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
           ) : (
             // Режим редактирования
@@ -345,7 +408,9 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                 <span className="text-red-500">{t("required")}</span>
               )}
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">{t("status")}</InputLabel>
+                <InputLabel id="demo-simple-select-label">
+                  {t("status")}
+                </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -354,16 +419,17 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                   label={t("status")}
                   onChange={handleChangeStatus}
                 >
-                  {Object.values(OrderStatus)
-                    .map((status, i) => (
-                      <MenuItem key={i} value={status}>
-                        {t(status)}
-                      </MenuItem>
-                    ))}
+                  {Object.values(OrderStatus).map((status, i) => (
+                    <MenuItem key={i} value={status}>
+                      {t(status)}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">{t("customer")}</InputLabel>
+                <InputLabel id="demo-simple-select-label">
+                  {t("customer")}
+                </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -372,16 +438,17 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                   label={t("customer")}
                   onChange={handleChangeCustomer}
                 >
-                  {customers
-                    .map((customer, i) => (
-                      <MenuItem key={i} value={customer.id}>
-                        {customer.name}
-                      </MenuItem>
-                    ))}
+                  {customers.map((customer, i) => (
+                    <MenuItem key={i} value={customer.id}>
+                      {customer.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">{t("owner")}</InputLabel>
+                <InputLabel id="demo-simple-select-label">
+                  {t("owner")}
+                </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -390,19 +457,18 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                   label={t("owner")}
                   onChange={handleChangeOwner}
                 >
-                  {owners
-                    .map((owner, i) => (
-                      <MenuItem key={i} value={owner.id}>
-                        {owner.about}
-                      </MenuItem>
-                    ))}
+                  {owners.map((owner, i) => (
+                    <MenuItem key={i} value={owner.id}>
+                      {owner.about}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
 
               <div className="flex gap-4">
                 <Button disabled={isPending} title={t("save")} type="submit" />
 
-                {id !== 0 && (
+                {isAdmin && (
                   <Button
                     title={t("delete")}
                     onButtonClick={onDeleteClick}
