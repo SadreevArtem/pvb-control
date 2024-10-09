@@ -28,7 +28,9 @@ export const Login: React.FC = () => {
   const { mutate: mutation, isPending } = useMutation({
     mutationFn: api.signInRequest,
     onSuccess: async (data) => {
-      const token = data.access_token;
+      const response = await data.json()
+      const token = response.access_token;
+
       if (!token) {
         throw new Error();
       }
