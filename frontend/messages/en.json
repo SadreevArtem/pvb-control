@@ -36,6 +36,47 @@
     "planner_manager": "Planner",
     "production_manager": "Production Manager",
     "control_manager": "Quality Control Manager"
+  },
+  "CustomerDetail": {
+    "edit": "Edit Directory",
+    "username": "Name",
+    "save": "Save",
+    "delete": "Delete",
+    "back": "Back"
+  },
+  "Orders": {
+    "add": "Add",
+    "ID": "Order ID",
+    "customerName": "Customer",
+    "contractNumber": "Contract Number",
+    "contractSingingDate": "Contract Signing Date",
+    "contractExecutionDate": "Contract Execution Date",
+    "complectName": "Contract Text",
+    "status": "Status",
+    "owner": "Responsible",
+    "created": "Created At",
+    "in_progress": "In Progress",
+    "inspection": "Under Inspection",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "OrderDetail": {
+    "back": "Back",
+    "required": "Required",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit Order",
+    "view": "View Order",
+    "customerName": "Customer",
+    "contractNumber": "Contract Number",
+    "contractSigningDate": "Contract Signing Date",
+    "contractExecutionDate": "Contract Execution Date",
+    "complectName": "Contract Text",
+    "status": "Status",
+    "owner": "Responsible",
+    "createdAt": "Created At",
+    "complectID": "Complect ID",
+    "customer": "Customer",
+    "contractText": "Project Grouping"
   }
-
 }

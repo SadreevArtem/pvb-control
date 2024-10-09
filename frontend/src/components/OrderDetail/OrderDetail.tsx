@@ -1,9 +1,9 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { Order } from "../../../shared/types";
+import { Customer, Order, OrderStatus, User } from "../../../shared/types";
 import { useAuthStore } from "../../../shared/stores/auth";
 import { Button } from "../Button";
 import { appToast } from "../AppToast/components/lib/appToast";
@@ -12,22 +12,33 @@ import { useTranslations } from "next-intl";
 import { formatDate } from "../../../shared/lib/formatDate";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-// import { baseDateValidation } from "../../../shared/lib/helpers";
+import { useJwtToken } from "../../../shared/hooks/useJwtToken";
 
 
 type Props = {
   id: number;
 }
 
-type Inputs = Order;
+type Inputs = Order & {customerId: number, ownerId: number};
 
 export const OrderDetail: React.FC<Props> = ({ id }) => {
   const isEdit = id !== 0;
   const token = useAuthStore((state) => state.token);
   const t = useTranslations('OrderDetail');
   const queryClient = useQueryClient();
+  const [status, setStatus] = React.useState<OrderStatus | "">("");
+  const [customer, setCustomer] = React.useState<number>(0);
+  const [owner, setOwner] = React.useState<number>(0);
   const [isEditMode, setIsEditMode] = useState(false || id===0); // Состояние для режима редактирования
   const router = useRouter();
+  const { sub } = useJwtToken();
+  const isAdmin = Number(sub) === 1;
+
+  const getCustomers = () => api.getAllCustomersRequest(token);
+   const {data: customers = [], isLoading:isLoadingCustomers } = useQuery<Customer[]>({queryKey:['customer'], queryFn: getCustomers});
+   
+   const getUsers = () => api.getAllUsersRequest(token);
+   const {data: owners = [], isLoading: isLoadingOwners } = useQuery<User[]>({queryKey:['user'], queryFn: getUsers, enabled: isAdmin}); 
 
   const getOrderById = () => api.getOrderByIdRequest(id, token);
   const getQueryKey = (id: number) => ['order'].concat(id.toString());
@@ -73,6 +84,20 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
       appToast.error(t("error"));
     },
   });
+  const handleChangeStatus = (event: SelectChangeEvent) => {
+    setStatus(event.target.value as OrderStatus);
+    setValue("status", event.target.value as OrderStatus);
+  };
+
+  const handleChangeCustomer = (event: SelectChangeEvent) => {
+    setCustomer(+event.target.value as number);
+    setValue("customerId", +event.target.value as number);
+  };
+
+  const handleChangeOwner = (event: SelectChangeEvent) => {
+    setOwner(+event.target.value as number);
+    setValue("ownerId", +event.target.value as number);
+  };
 
   const onDeleteClick = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -87,9 +112,20 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
     if (!order) return;
     Object.keys(order).forEach((key) => {
       if (key in order) {
-        setValue(key as keyof Order, order[key as keyof Order] as string);
+        setValue(key as keyof Inputs, order[key as keyof Order] as string);
       }
     });
+    if (order.customer) {
+      setCustomer(order.customer.id);
+      setValue("customerId", order.customer.id);
+    }
+  
+    if (order.owner) {
+      setOwner(order.owner.id);
+      setValue("ownerId", order.owner.id);
+    }
+  
+    setStatus(order.status as OrderStatus);
   }, [order, setValue]);
 
   // Функция для переключения в режим редактирования
@@ -99,7 +135,6 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
 
   return (
     <>
-      <h1>{t("orders")}</h1>
       {!isLoading && (
         <section className="container px-40 rounded-lg pt-4 mt-[60px]">
           <div className="flex mt-8 justify-between gap-4">
@@ -134,6 +169,86 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                       </TableCell>
                       <TableCell component="th" scope="row">
                         {formatDate(order?.contractSigningDate)}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {t("contractExecutionDate")}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {formatDate(order?.contractExecutionDate)}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {t("contractText")}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {order?.contractText}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {t("complectID")}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {order?.complectID}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {t("complectName")}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {order?.complectName}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {t("status")}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {order?.status}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {t("customer")}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {order?.customer?.name}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {t("owner")}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {order?.owner?.about}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {t("createdAt")}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {formatDate(order?.createdAt)}
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -174,7 +289,9 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                         fullWidth: true,
                         variant: "outlined",
                         error: !!errors.contractSigningDate,
-                        helperText: errors.contractSigningDate ? t("required") : "",
+                        helperText: errors.contractSigningDate
+                          ? t("required")
+                          : "",
                       },
                     }}
                   />
@@ -193,15 +310,95 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                         fullWidth: true,
                         variant: "outlined",
                         error: !!errors.contractExecutionDate,
-                        helperText: errors.contractExecutionDate ? t("required") : "",
+                        helperText: errors.contractExecutionDate
+                          ? t("required")
+                          : "",
                       },
                     }}
                   />
                 )}
               />
-             
-                  
-              
+
+              <TextField
+                variant="outlined"
+                label={t("contractText")}
+                {...register("contractText")}
+              />
+              {errors.contractText && (
+                <span className="text-red-500">{t("required")}</span>
+              )}
+              <TextField
+                variant="outlined"
+                label={t("complectID")}
+                {...register("complectID")}
+              />
+              {errors.complectID && (
+                <span className="text-red-500">{t("required")}</span>
+              )}
+
+              <TextField
+                variant="outlined"
+                label={t("complectName")}
+                {...register("complectName")}
+              />
+              {errors.complectName && (
+                <span className="text-red-500">{t("required")}</span>
+              )}
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">{t("status")}</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={status}
+                  disabled={!isAdmin}
+                  label={t("status")}
+                  onChange={handleChangeStatus}
+                >
+                  {Object.values(OrderStatus)
+                    .map((status, i) => (
+                      <MenuItem key={i} value={status}>
+                        {t(status)}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">{t("customer")}</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={customer.toString()}
+                  disabled={isLoadingCustomers}
+                  label={t("customer")}
+                  onChange={handleChangeCustomer}
+                >
+                  {customers
+                    .map((customer, i) => (
+                      <MenuItem key={i} value={customer.id}>
+                        {customer.name}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">{t("owner")}</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={owner.toString()}
+                  disabled={isLoadingOwners}
+                  label={t("owner")}
+                  onChange={handleChangeOwner}
+                >
+                  {owners
+                    .map((owner, i) => (
+                      <MenuItem key={i} value={owner.id}>
+                        {owner.about}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+
               <div className="flex gap-4">
                 <Button disabled={isPending} title={t("save")} type="submit" />
 

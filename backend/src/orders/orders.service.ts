@@ -24,10 +24,25 @@ export class OrdersService {
     });
   }
   findById(id: number) {
-    return this.orderRepository.findOneBy({ id });
+    return this.orderRepository.findOne({
+      where: { id },
+      relations: {
+        owner: true,
+        customer: true,
+      },
+    });
   }
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return this.orderRepository.update(id, updateOrderDto);
+  async update(id: number, updateOrderDto: UpdateOrderDto) {
+    const { customerId, ownerId: userId, ...rest } = updateOrderDto;
+    // Получаем сущности для связи
+    const owner = await this.usersService.findById(userId);
+    const customer = await this.customersService.findById(customerId);
+    // Обновляем заказ, передавая только нужные поля из rest
+    return this.orderRepository.update(id, {
+      ...rest,
+      owner,
+      customer,
+    });
   }
   async create(createOrderDto: CreateOrderDto, userId: number) {
     const { customerId } = createOrderDto;

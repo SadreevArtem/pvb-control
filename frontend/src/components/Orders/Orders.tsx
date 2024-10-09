@@ -7,6 +7,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import Link from 'next/link';
 import { Button } from '../Button';
 import { useTranslations } from 'next-intl';
+import { formatDate } from '../../../shared/lib/formatDate';
 
 export const Orders = () => {
    const token = useAuthStore((state) => state.token);
@@ -31,7 +32,7 @@ export const Orders = () => {
                 <TableCell>{t('ID')}</TableCell>
                   <TableCell>{t('customerName')}</TableCell>
                   <TableCell>{t('contractNumber')}</TableCell>
-                  <TableCell>{t('contractSingingDate')}</TableCell>
+                  <TableCell>{t('contractSigningDate')}</TableCell>
                   <TableCell>{t('contractExecutionDate')}</TableCell>
                   <TableCell>{t('complectName')}</TableCell>
                   <TableCell>{t('status')}</TableCell>
@@ -54,23 +55,17 @@ export const Orders = () => {
                       </Link>
                     </TableCell>
                     <TableCell>
-                      {new Date(row.contractSigningDate).toLocaleString("ru-RU", {
-                        timeZone: "Asia/Yekaterinburg",
-                      })}
+                      {formatDate(row.contractSigningDate)}
                     </TableCell>
                     <TableCell>
-                      {new Date(row.contractExecutionDate).toLocaleString("ru-RU", {
-                        timeZone: "Asia/Yekaterinburg",
-                      })}
+                      {formatDate(row.contractExecutionDate)}
                     </TableCell>
 
                     <TableCell>{row.complectName}</TableCell>
-                    <TableCell>{row.status}</TableCell>
+                    <TableCell>{t(row.status)}</TableCell>
                     <TableCell>{row.owner?.about}</TableCell>
                     <TableCell>
-                      {new Date(row.createdAt).toLocaleString("ru-RU", {
-                        timeZone: "Asia/Yekaterinburg",
-                      })}
+                      {formatDate(row.createdAt)}
                     </TableCell>
                   </TableRow>
                 ))}

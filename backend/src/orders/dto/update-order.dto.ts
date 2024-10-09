@@ -29,6 +29,12 @@ export class UpdateOrderDto {
   comment?: string;
 
   @IsOptional()
+  customerId: number;
+
+  @IsOptional()
+  ownerId: number;
+
+  @IsOptional()
   @IsEnum(OrderStatus)
   status?: OrderStatus;
 }

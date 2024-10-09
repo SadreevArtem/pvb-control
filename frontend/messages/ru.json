@@ -37,16 +37,51 @@
       "production_manager": "Ответсвенный за производство",
       "control_manager": "Отвественный за контроль"
     }, 
+    "CustomerDetail": {
+      "edit": "Редактирование справочника",
+      "username": "Наименование",
+      "save": "Сохранить",
+      "delete": "Удалить",
+      "back": "назад"
+    },
     "Orders": {
       "add": "Добавить",
       "ID": "ID заказа",
       "customerName": "Заказчик",
       "contractNumber": "Номер договора",
-      "contractSingingDate": "Дата подписания контракта",
+      "contractSigningDate": "Дата подписания контракта",
       "contractExecutionDate": "Дата исполнения контракта",
       "complectName": "Текст по договору",
       "status": "Статус",
       "owner": "Ответсвенный",
-      "created": "Создано"
+      "created": "Создано",
+      "in_progress": "в процессе",
+      "inspection": "на проверке",
+      "completed": "завершен",
+      "cancelled": "отменен"
+    },
+    "OrderDetail": {
+      "back": "назад",
+      "required": "Обязательно для заполнения",
+      "save": "Сохранить",
+      "delete": "Удалить",
+      "edit": "Редактировать заказ",
+      "view": "Просмотр заказа",
+      "closeEdit": "выйти",
+      "customerName": "Заказчик",
+      "contractNumber": "Номер договора",
+      "contractSigningDate": "Дата подписания контракта",
+      "contractExecutionDate": "Дата исполнения контракта",
+      "complectName": "Текст по договору",
+      "status": "Статус",
+      "owner": "Ответсвенный",
+      "createdAt": "Создано",
+      "complectID": "ID комплекта",
+      "customer": "Заказчик",
+      "contractText": "Группировка проекта",
+      "in_progress": "в процессе",
+      "inspection": "на проверке",
+      "completed": "завершен",
+      "cancelled": "отменен"
     }
 }
