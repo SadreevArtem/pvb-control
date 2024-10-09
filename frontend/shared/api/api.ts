@@ -8,26 +8,13 @@ class API {
   }
 
   // Асинхронный метод для авторизации
-  signInRequest = async (input: { username: string; password: string }) => {
-    try {
-      const response = await fetch(`${this.baseUrl}/signin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      return await response.json(); 
-    } catch (error) {
-      console.error("Sign-in request failed:", error);
-      throw error;
-    }
-  };
+  signInRequest = (input: { username: string; password: string }) => fetch(`${this.baseUrl}/signin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  });
 
   // Асинхронный метод для получения всех пользователей
   getAllUsersRequest = async (token: string) => {

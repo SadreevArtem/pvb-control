@@ -29,17 +29,17 @@ export default function App({ Component, pageProps }: AppProps) {
   useBroadCastAuth();
   return getLayout(
     <>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <NextIntlClientProvider
-          locale={router.locale}
-          messages={pageProps.messages}
-          timeZone="Europe/Vienna"
-        >
+      <NextIntlClientProvider
+        locale={router.locale}
+        messages={pageProps.messages}
+        timeZone="Europe/Vienna"
+      >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
           <QueryClientProvider client={queryClient}>
             <Component {...pageProps} />
           </QueryClientProvider>
-        </NextIntlClientProvider>
-      </LocalizationProvider>
+        </LocalizationProvider>
+      </NextIntlClientProvider>
     </>
   );
 }
