@@ -361,8 +361,6 @@ createOrderRequest = async (input: Order, token: string) => {
 }
 }
 
-export const api = new API('http://localhost:4000');
+// export const api = new API('http://localhost:4000');
 
-// export const api = new API('https://api.pvb-university.com');
-
-// export const api = new API('http://62.76.233.202:4000');
+export const api = new API('https://api.pvb-university.com');
