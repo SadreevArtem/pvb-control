@@ -1,4 +1,18 @@
-import { FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+} from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -15,34 +29,39 @@ import dayjs from "dayjs";
 import { useJwtToken } from "../../../shared/hooks/useJwtToken";
 import Link from "next/link";
 
-
 type Props = {
   id: number;
-}
+};
 
-type Inputs = Order & {customerId: number, ownerId: number};
+type Inputs = Order & { customerId: number; ownerId: number };
 
 export const OrderDetail: React.FC<Props> = ({ id }) => {
   const isEdit = id !== 0;
   const token = useAuthStore((state) => state.token);
-  const t = useTranslations('OrderDetail');
+  const t = useTranslations("OrderDetail");
   const queryClient = useQueryClient();
   const [status, setStatus] = React.useState<OrderStatus | "">("");
   const [customer, setCustomer] = React.useState<number>(0);
   const [owner, setOwner] = React.useState<number>(0);
-  const [isEditMode, setIsEditMode] = useState(false || id===0); // Состояние для режима редактирования
+  const [isEditMode, setIsEditMode] = useState(false || id === 0); // Состояние для режима редактирования
   const router = useRouter();
   const { sub } = useJwtToken();
   const isAdmin = Number(sub) === 1;
 
   const getCustomers = () => api.getAllCustomersRequest(token);
-   const {data: customers = [], isLoading:isLoadingCustomers } = useQuery<Customer[]>({queryKey:['customer'], queryFn: getCustomers});
-   
-   const getUsers = () => api.getAllUsersRequest(token);
-   const {data: owners = [], isLoading: isLoadingOwners } = useQuery<User[]>({queryKey:['user'], queryFn: getUsers, enabled: isAdmin}); 
+  const { data: customers = [], isLoading: isLoadingCustomers } = useQuery<
+    Customer[]
+  >({ queryKey: ["customer"], queryFn: getCustomers });
+
+  const getUsers = () => api.getAllUsersRequest(token);
+  const { data: owners = [], isLoading: isLoadingOwners } = useQuery<User[]>({
+    queryKey: ["user"],
+    queryFn: getUsers,
+    enabled: isAdmin,
+  });
 
   const getOrderById = () => api.getOrderByIdRequest(id, token);
-  const getQueryKey = (id: number) => ['order'].concat(id.toString());
+  const getQueryKey = (id: number) => ["order"].concat(id.toString());
 
   const { data: order, isLoading } = useQuery<Order>({
     queryKey: getQueryKey(id),
@@ -58,8 +77,10 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const updateOrderFunc = (input: Order) => api.updateOrderRequest(input, token);
-  const createOrderFunc = (input: Order) => api.createOrderRequest(input, token);
+  const updateOrderFunc = (input: Order) =>
+    api.updateOrderRequest(input, token);
+  const createOrderFunc = (input: Order) =>
+    api.createOrderRequest(input, token);
   const deleteFunc = () => api.deleteOrderRequest(id, token);
 
   const { mutate: mutation, isPending } = useMutation({
@@ -78,7 +99,7 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
     mutationFn: deleteFunc,
     onSuccess: () => {
       appToast.success(t("deleted"));
-      queryClient.invalidateQueries({ queryKey: ['order'] });
+      queryClient.invalidateQueries({ queryKey: ["order"] });
       router.back();
     },
     onError: () => {
@@ -120,12 +141,12 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
       setCustomer(order.customer.id);
       setValue("customerId", order.customer.id);
     }
-  
+
     if (order.owner) {
       setOwner(order.owner.id);
       setValue("ownerId", order.owner.id);
     }
-  
+
     setStatus(order.status as OrderStatus);
   }, [order, setValue]);
 
@@ -262,12 +283,18 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                 onButtonClick={toggleEditMode}
                 type="button"
               />
-              <h2 className="text-xl my-8 font-bold">Комплекты</h2>
+              <div className="flex items-center">
+                <h2 className="text-xl my-8 font-bold">Комплекты</h2>
+                <Link className="ml-auto" href={`/orders/${id}/0`}>
+                  <Button className=" w-auto px-6" title={t("add")} />
+                </Link>
+
+              </div>
               <TableContainer component={Paper}>
                 <Table>
                   <TableHead>
                     <TableRow className="bg-gray-100">
-                    <TableCell>{t("complectId")}</TableCell>
+                      <TableCell>{t("complectId")}</TableCell>
                       <TableCell>{t("equipmentType")}</TableCell>
                       <TableCell>{t("manufacturer")}</TableCell>
                       <TableCell>{t("technicalSpecifications")}</TableCell>
@@ -307,18 +334,14 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                         <TableCell>{row.seatType}</TableCell>
                         <TableCell>{row.execution}</TableCell>
                         <TableCell>{row.trTs}</TableCell>
-                        <TableCell>
-                          {formatDate(row.startDate)}
-                        </TableCell>
+                        <TableCell>{formatDate(row.startDate)}</TableCell>
                         <TableCell>
                           {formatDate(row.acceptanceStartDate)}
                         </TableCell>
                         <TableCell>
                           {formatDate(row.documentReadinessDate)}
                         </TableCell>
-                        <TableCell>
-                          {formatDate(row.shipmentDate)}
-                        </TableCell>
+                        <TableCell>{formatDate(row.shipmentDate)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -334,10 +357,10 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
               <TextField
                 variant="outlined"
                 label={t("contractNumber")}
-                {...register("contractNumber")}
+                {...register("contractNumber", { required: true })}
               />
               {errors.contractNumber && (
-                <span className="text-red-500">{t("required")}</span>
+                <span className="text-red">{t("required")}</span>
               )}
               <Controller
                 name="contractSigningDate"
@@ -385,27 +408,27 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
               <TextField
                 variant="outlined"
                 label={t("contractText")}
-                {...register("contractText")}
+                {...register("contractText", { required: true })}
               />
               {errors.contractText && (
-                <span className="text-red-500">{t("required")}</span>
+                <span className="text-red">{t("required")}</span>
               )}
               <TextField
                 variant="outlined"
                 label={t("complectID")}
-                {...register("complectID")}
+                {...register("complectID", { required: true })}
               />
               {errors.complectID && (
-                <span className="text-red-500">{t("required")}</span>
+                <span className="text-red">{t("required")}</span>
               )}
 
               <TextField
                 variant="outlined"
                 label={t("complectName")}
-                {...register("complectName")}
+                {...register("complectName", { required: true })}
               />
               {errors.complectName && (
-                <span className="text-red-500">{t("required")}</span>
+                <span className="text-red">{t("required")}</span>
               )}
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
@@ -426,7 +449,7 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                   ))}
                 </Select>
               </FormControl>
-              <FormControl fullWidth>
+              <FormControl fullWidth required>
                 <InputLabel id="demo-simple-select-label">
                   {t("customer")}
                 </InputLabel>

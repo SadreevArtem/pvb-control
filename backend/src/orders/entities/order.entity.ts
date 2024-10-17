@@ -40,8 +40,7 @@ export class Order {
   @Length(2, 200)
   complectName: string;
 
-  @Column()
-  @Length(2, 200)
+  @Column({ nullable: true })
   comment: string;
 
   @Column({

@@ -34,6 +34,7 @@ export class CreateOrderDto {
   @Length(2, 200)
   comment: string;
 
+  @IsOptional()
   @IsEnum(OrderStatus)
   status: OrderStatus;
 
