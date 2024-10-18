@@ -317,13 +317,13 @@ export const OrderDetail: React.FC<Props> = ({ id }) => {
                       <TableRow key={row.id}>
                         <TableCell>
                           <Link
-                            href={`/users/${row.id}`}
+                            href={`/orders/${id}/${row.id}`}
                             className="hover:text-primary"
                           >
                             {row.name}
                           </Link>
                         </TableCell>
-                        <TableCell>{row.equipmentType}</TableCell>
+                        <TableCell>{row.equipmentType?.name}</TableCell>
                         <TableCell>{row.manufacturer}</TableCell>
                         <TableCell>{row.technicalSpecifications}</TableCell>
                         <TableCell>{row.brand}</TableCell>

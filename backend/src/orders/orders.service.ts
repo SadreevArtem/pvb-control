@@ -29,7 +29,9 @@ export class OrdersService {
       relations: {
         owner: true,
         customer: true,
-        complects: true,
+        complects: {
+          equipmentType: true,
+        },
       },
     });
   }

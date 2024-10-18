@@ -11,6 +11,7 @@ import { UpdateComplectDto } from './dto/update-complect.dto';
 import { OrdersService } from 'src/orders/orders.service';
 import { User } from 'src/users/entities/user.entity';
 import { UserRole } from 'src/types';
+import { EquipmentTypesService } from 'src/equipment-types/equipment-types.service';
 
 @Injectable()
 export class ComplectsService {
@@ -18,11 +19,13 @@ export class ComplectsService {
     @InjectRepository(Complect)
     private readonly complectRepository: Repository<Complect>,
     private readonly ordersService: OrdersService,
+    private readonly equipmentTypeService: EquipmentTypesService,
   ) {}
 
   async create(createComplectDto: CreateComplectDto): Promise<Complect> {
-    const { orderId, ...complectData } = createComplectDto;
-
+    const { orderId, equipmentTypeId, ...complectData } = createComplectDto;
+    const equipmentType =
+      await this.equipmentTypeService.findById(equipmentTypeId);
     const order = await this.ordersService.findById(orderId);
     if (!order) {
       throw new NotFoundException('Order not found');
@@ -31,6 +34,7 @@ export class ComplectsService {
     const complect = this.complectRepository.create({
       ...complectData,
       order,
+      equipmentType,
     });
 
     return this.complectRepository.save(complect);
@@ -41,7 +45,12 @@ export class ComplectsService {
   }
 
   async findOne(id: number): Promise<Complect> {
-    const complect = await this.complectRepository.findOne({ where: { id } });
+    const complect = await this.complectRepository.findOne({
+      where: { id },
+      relations: {
+        equipmentType: true,
+      },
+    });
     if (!complect) {
       throw new NotFoundException(`Complect with id ${id} not found`);
     }
@@ -49,8 +58,9 @@ export class ComplectsService {
   }
 
   async update(id: number, updateComplectDto: UpdateComplectDto) {
-    const { orderId, ...complectData } = updateComplectDto;
-
+    const { orderId, equipmentTypeId, ...complectData } = updateComplectDto;
+    const equipmentType =
+      await this.equipmentTypeService.findById(equipmentTypeId);
     const order = await this.ordersService.findById(orderId);
     if (!order) {
       throw new NotFoundException('Order not found');
@@ -59,6 +69,7 @@ export class ComplectsService {
     return this.complectRepository.update(id, {
       ...complectData,
       order,
+      equipmentType,
     });
   }
 

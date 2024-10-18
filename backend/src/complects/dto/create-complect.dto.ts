@@ -1,5 +1,6 @@
 import {
   IsDate,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -13,12 +14,10 @@ export class CreateComplectDto {
   @Length(2, 200)
   name: string;
 
-  @IsString()
-  @Length(2, 200)
-  equipmentType: string;
+  @IsNotEmpty()
+  equipmentTypeId: number;
 
   @IsString()
-  @Length(2, 200)
   manufacturer: string;
 
   @IsString()

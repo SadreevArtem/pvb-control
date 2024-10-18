@@ -1,2 +1,2 @@
-export type References = "customers" | "new";
+export type References = "customers" | "equipmentType";
 

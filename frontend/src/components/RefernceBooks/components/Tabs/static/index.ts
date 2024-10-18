@@ -8,7 +8,7 @@ export const reference: {id: number, categoryName: References, value: string}[] 
   },
   {
     id: 2,
-    categoryName: "new",
-    value: "Другое",
+    categoryName: "equipmentType",
+    value: "Вид оборудования",
   },
 ];

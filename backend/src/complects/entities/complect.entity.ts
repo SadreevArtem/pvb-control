@@ -1,4 +1,5 @@
 import { Length } from 'class-validator';
+import { EquipmentType } from 'src/equipment-types/entities/equipment-type.entity';
 import { Order } from 'src/orders/entities/order.entity';
 import {
   Column,
@@ -18,8 +19,8 @@ export class Complect {
   @Length(2, 200)
   name: string; // Название комплекта
 
-  @Column()
-  equipmentType: string; // Вид оборудования
+  @ManyToOne(() => EquipmentType, (equipmentType) => equipmentType.complects)
+  equipmentType: EquipmentType; // Вид оборудования
 
   @Column()
   manufacturer: string; // Изготовитель

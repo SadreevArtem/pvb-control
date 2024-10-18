@@ -40,10 +40,17 @@ export type Customer = {
   updatedAt: Date;
 };
 
+export type EquipmentType = {
+  id: number;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Complect = {
   id: number;
   name: string;
-  equipmentType: string;
+  equipmentType: EquipmentType;
   manufacturer: string;
   technicalSpecifications: string;
   brand: string;
@@ -58,6 +65,7 @@ export type Complect = {
   acceptanceStartDate?: Date; // Дата старта приемки, может быть не указана
   documentReadinessDate?: Date; // Дата готовности документов, может быть не указана
   shipmentDate?: Date; // Дата отгрузки, может быть не указана
+  order: Order;
   createdAt: Date;
   updatedAt: Date;
 };
